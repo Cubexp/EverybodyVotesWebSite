@@ -28,7 +28,7 @@ body,
 
 /* 解决级联选择框的问题 */
 div .el-scrollbar__wrap {
-    height: 300px !important
+    height: 300px !important;
 }
 
 /* 步骤条 */
@@ -39,6 +39,11 @@ div .el-scrollbar__wrap {
 .el-step__title {
     font-size: 13px;
 }
-.ql-editor{
+.ql-editor {
     min-height: 300px;
+}
+
+/*弹框圆角*/
+.el-dialog-style {
+    border-radius: 10px;
 }
