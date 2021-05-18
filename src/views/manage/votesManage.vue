@@ -17,7 +17,7 @@
         <VoteManage> </VoteManage>
       </el-tab-pane>
       <el-tab-pane label="数据管理" name="dataManage">
-        <span slot="label"> <i class="el-icon-trophy-1"></i> 数据管理</span>
+        <span slot="label"> <i class="el-icon-trophy-1"></i> 我参加的活动</span>
         <DataManage></DataManage>
       </el-tab-pane>
       <el-tab-pane label="个人资料" name="personData">

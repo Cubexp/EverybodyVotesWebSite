@@ -48,8 +48,16 @@ import {
     Radio,
     DatePicker,
     Link,
+    RadioGroup,
+    RadioButton,
+    InputNumber,
+    Divider,
 } from 'element-ui'
 
+Vue.use(Divider)
+Vue.use(InputNumber)
+Vue.use(RadioGroup)
+Vue.use(RadioButton)
 Vue.use(Link)
 Vue.use(DatePicker)
 Vue.use(Radio)
@@ -77,6 +85,7 @@ Vue.use(BreadcrumbItem)
 Vue.use(Card)
 Vue.use(Row)
 Vue.use(Col)
+Vue.use(Table)
 Vue.use(TableColumn)
 Vue.use(Switch)
 Vue.use(Tooltip)

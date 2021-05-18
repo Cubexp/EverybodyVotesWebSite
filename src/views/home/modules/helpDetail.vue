@@ -1,69 +1,68 @@
 <template>
   <div class="details">
     <div class="notice-details">
-      <h3>习近平的扶贫相册丨小角落大民生 这件“小事”总书记一直关心</h3>
+      <h3>{{ news.title }}</h3>
       <p class="author">
         <span>
           <img
-            :src="avaotrUrl"
+            :src="news.sysUser.avatar"
             height="30px"
             width="30px"
             style="border-radius: 50%"
             alt
           />
         </span>
-        <span>测试账户</span>
-      </p>
-      <p class="tip">
-        <span>
+        <span>{{ news.sysUser.name }}</span>
+        <span class="tip">
           <i class="el-icon-date"></i>
-          2020.8.20 20:57:23
-        </span>
-        <span>
-          <i class="el-icon-view"></i>
-          23
+          {{ news.createTime | dateFormat }}
         </span>
       </p>
       <div
         class="content"
         style="min-height: 150px; font-size: 18px"
-        v-html="content"
+        v-html="news.content"
       ></div>
     </div>
-    <NoticeCut :otherNotcie="otherNotcie"></NoticeCut>
   </div>
 </template>
 
 <script>
-import NoticeCut from "@/compoents/manage/NoticeCut";
+import marked from "@/assets/js/marked";
 
 export default {
-  components: {
-    NoticeCut,
-  },
   data() {
     return {
-      avaotrUrl:
-        "http://cpc.people.com.cn/NMediaFile/2021/0511/MAIN202105111649000198686590044.jpg",
-      content:
-        "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd<h1>333<h2>",
-      otherNotcie: [],
+      news: {},
     };
   },
   created() {
-    const id = this.$route.query.id;
-    this.setNotice(id);
+    const id = this.$route.params.id;
+    this.getNotice(id);
   },
   methods: {
     // 获取通知信息
-    setNotice(id) {},
+    async getNotice(id) {
+      const { data: res } = await this.$http.get(`/news/${id}`);
+
+      if (res.code !== 200) {
+        return this.$message.error(res.message);
+      }
+
+      this.news = res.data;
+      this.news.content = marked(this.news.content);
+      console.log(this.news);
+    },
   },
 };
 </script>
 
 <style scoped>
+h3 {
+  text-align: center;
+}
 .details {
-  border: 1px solid #ccc;
+  border: 1px solid rgb(204, 204, 204, 0.4);
   border-radius: 10px;
   min-height: 550px;
 }
@@ -115,11 +114,11 @@ export default {
 a {
   color: #00a1ff;
 }
-.tip span:nth-child(1) {
+.tip i {
   color: #00a1ff;
 }
 
-.tip span:nth-child(2) {
+.tip {
   color: #ccc;
 }
 </style>

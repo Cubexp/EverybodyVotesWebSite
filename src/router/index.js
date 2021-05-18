@@ -18,11 +18,17 @@ const routes = [
             {
                 path: 'create',
                 name: 'create',
+                meta: {
+                    roles: ['user', 'admin'],
+                },
                 component: () => import('@/views/home/modules/create'),
             },
             {
                 path: 'manage',
                 name: 'manage',
+                meta: {
+                    roles: ['user', 'admin'],
+                },
                 redirect: '/manage/votes_manage',
                 component: () => import('@/views/home/modules/manage'),
                 children: [
@@ -44,14 +50,64 @@ const routes = [
                 component: () => import('@/views/home/modules/about'),
             },
             {
-                path: 'help',
+                path: '/help',
                 name: 'help',
                 component: () => import('@/views/home/modules/help'),
             },
             {
-                path: 'notice',
+                path: '/helpDetail/:id',
+                name: 'helpDetail',
+                component: () => import('@/views/home/modules/helpDetail'),
+                props: true,
+            },
+            {
+                path: '/notice',
                 name: 'notice',
                 component: () => import('@/views/home/modules/helpDetail'),
+            },
+        ],
+    },
+    {
+        path: '/backstage',
+        name: 'backstage',
+        meta: {
+            roles: ['admin'],
+        },
+        redirect: '/backstage/newsList',
+        component: () => import('@/views/backstage/index'),
+        children: [
+            {
+                path: 'newsList',
+                name: 'newsList',
+                meta: {
+                    roles: ['admin'],
+                },
+                component: () => import('@/views/backstage/news/newsList'),
+            },
+            {
+                path: 'newsPublish',
+                name: 'newsPublish',
+                meta: {
+                    roles: ['admin'],
+                },
+                component: () => import('@/views/backstage/news/newsPublish'),
+            },
+            {
+                path: 'newsType',
+                name: 'newsType',
+                meta: {
+                    roles: ['admin'],
+                },
+                component: () => import('@/views/backstage/news/newsType'),
+            },
+            {
+                path: '/newsEdit/:id',
+                name: 'newsEdit',
+                meta: {
+                    roles: ['admin'],
+                },
+                component: () => import('@/views/backstage/news/editNews'),
+                props: true,
             },
         ],
     },
@@ -82,6 +138,29 @@ const routes = [
 
 const router = new VueRouter({
     routes,
+})
+
+router.beforeEach(async (to, from, next) => {
+    if (
+        to.path === '/manage' ||
+        to.path === '/create' ||
+        to.path === '/manage/votes_manage'
+    ) {
+        let isLogined = window.localStorage.getItem('token') ? true : false
+
+        if (!isLogined) {
+            return next('/login')
+        }
+    }
+
+    if (to.path === '/backstage' || to.path === '/backstage/newsList') {
+        let userRole = window.localStorage.getItem('roleName')
+
+        if (userRole !== 'admin') {
+            return next('/error/401')
+        }
+    }
+    return next()
 })
 
 export default router
