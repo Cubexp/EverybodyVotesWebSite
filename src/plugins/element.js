@@ -52,8 +52,12 @@ import {
     RadioButton,
     InputNumber,
     Divider,
+    Badge,
+    Progress,
 } from 'element-ui'
 
+Vue.use(Progress)
+Vue.use(Badge)
 Vue.use(Divider)
 Vue.use(InputNumber)
 Vue.use(RadioGroup)

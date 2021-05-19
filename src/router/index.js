@@ -65,6 +65,25 @@ const routes = [
                 name: 'notice',
                 component: () => import('@/views/home/modules/helpDetail'),
             },
+            {
+                path: '/activity/:id',
+                name: 'activity',
+                component: () => import('@/views/home/modules/activity'),
+                props: true,
+            },
+            {
+                path: '/activitySort/:id',
+                name: 'activitySort',
+                component: () => import('@/views/home/modules/activitySort'),
+                props: true,
+            },
+            {
+                path: '/activityIntroduce/:id',
+                name: 'activityIntroduce',
+                component: () =>
+                    import('@/views/home/modules/activityIntroduce'),
+                props: true,
+            },
         ],
     },
     {
