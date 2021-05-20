@@ -1,7 +1,7 @@
 <template>
   <div class="box">
     <!-- 分组 -->
-    <el-row style="margin-top: 10px; margin-left: 25%">
+    <el-row style="margin-top: 10px; margin-left: 30%">
       <el-col
         :span="2"
         v-for="playerGroupItem in playerGroupList"
