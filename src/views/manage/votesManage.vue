@@ -16,10 +16,11 @@
         <span slot="label"> <i class="el-icon-postcard"></i> 投票管理</span>
         <VoteManage> </VoteManage>
       </el-tab-pane>
-      <el-tab-pane label="数据管理" name="dataManage">
+      <!-- 增删改查我要写吐了。。。这个功能，弄成以后扩展吧。。。 -->
+      <!-- <el-tab-pane label="数据管理" name="dataManage">
         <span slot="label"> <i class="el-icon-trophy-1"></i> 我参加的活动</span>
         <DataManage></DataManage>
-      </el-tab-pane>
+      </el-tab-pane> -->
       <el-tab-pane label="个人资料" name="personData">
         <span slot="label"> <i class="el-icon-user"></i> 个人资料</span>
         <PersonDetail></PersonDetail>

@@ -1,34 +1,49 @@
 <template>
   <div class="box">
     <!-- 分组 -->
-    <el-row style="margin-top: 10px; margin-left: 30%">
+    <el-row style="margin-top: 10px; margin-left: 25%">
       <el-col
         :span="2"
-        v-for="playerGroupItem in playerGroupList"
+        v-for="playerGroupItem in group"
         :key="playerGroupItem.id"
       >
-        <el-badge :value="12" class="item">
-          <el-button round @click="getNewsList(playerGroupItem.id)">{{
-            playerGroupItem.name
-          }}</el-button>
-        </el-badge>
+        <el-button round @click="getActivitySorByGroupId(playerGroupItem.id)">{{
+          playerGroupItem.name
+        }}</el-button>
       </el-col>
     </el-row>
     <el-card class="box-card">
       <span>排行榜</span>
       <el-table
         ref="singleTable"
-        :data="tableData"
+        :data="activitySort"
         highlight-current-row
-        @current-change="handleCurrentChange"
         style="width: 100%"
       >
-        <el-table-column type="index" width="50"> </el-table-column>
+        <el-table-column type="index" label="排名" width="50">
+        </el-table-column>
         <el-table-column property="number" label="编号" width="120">
         </el-table-column>
         <el-table-column property="name" label="用户名称" width="120">
         </el-table-column>
-        <el-table-column property="count" label="票数"> </el-table-column>
+        <el-table-column
+          v-if="activity.voteButtonType == 1"
+          property="voteCount"
+          label="票数"
+        >
+        </el-table-column>
+        <el-table-column
+          v-if="activity.voteButtonType == 2"
+          property="voteCount"
+          label="点选数"
+        >
+        </el-table-column>
+        <el-table-column
+          v-if="activity.voteButtonType == 3"
+          property="averageScore"
+          label="评分"
+        >
+        </el-table-column>
       </el-table>
     </el-card>
     <!-- 底部菜单 -->
@@ -98,12 +113,58 @@ export default {
           count: 23,
         },
       ],
+      activitySort: [],
+      activity: {},
+      group: [],
     };
   },
   created() {
     this.activityId = this.$route.params.id;
+    this.getGroupId(this.activityId);
+    this.getActivitySor();
   },
   methods: {
+    async getGroupId(activityId) {
+      const { data: res } = await this.$http.get(`/activity/${activityId}/all`);
+
+      if (res.code !== 200) {
+        return this.$message.error(res.message);
+      }
+      this.group = res.data.group;
+      this.activity = res.data;
+    },
+    async getActivitySor() {
+      const { data: res } = await this.$http.get(
+        `/activity/${this.activityId}/sort`,
+        {
+          params: {
+            groupId: -1,
+          },
+        }
+      );
+
+      if (res.code !== 200) {
+        return this.$message.error(res.message);
+      }
+
+      this.activitySort = res.data.records;
+    },
+    async getActivitySorByGroupId(groupId) {
+      const { data: res } = await this.$http.get(
+        `/activity/${this.activityId}/sort`,
+        {
+          params: {
+            groupId: groupId,
+          },
+        }
+      );
+
+      if (res.code !== 200) {
+        return this.$message.error(res.message);
+      }
+
+      this.activitySort = res.data.records;
+    },
     redirectHome() {
       this.$router.push({ path: `/activity/${this.activityId}` });
     },

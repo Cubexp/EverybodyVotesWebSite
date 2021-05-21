@@ -1,5 +1,6 @@
 <template>
   <div>
+    <a ref="downLoadLink"></a>
     <div class="voteManageList">
       <div
         class="voteManageItem"
@@ -12,28 +13,47 @@
           </div>
 
           <el-switch
-            v-model="activityItem.activityFlag"
+            v-model="activityItem.status"
             active-text="活动开启"
             inactive-text="关闭"
+            @change="updateActivityStatus(activityItem.status, activityItem.id)"
           >
           </el-switch>
         </div>
         <div class="voteManageItemDate">
           <span>ID: {{ activityItem.id }}</span>
-          <span>创建时间: {{ activityItem.createTime }}</span>
+          <span>创建时间: {{ activityItem.createTime | dateFormat }}</span>
         </div>
 
         <div class="imag_box">
           <!--- 活动关闭图片 -->
-          <div v-if="activityItem.activityFlag == false" class="guanbi">
+          <div v-if="activityItem.status == false" class="guanbi">
             活动已关闭
           </div>
-          <img class="voteManageItemImage" :src="activityItem.activityImage" />
+          <img
+            v-if="activityItem.coverType == 0"
+            class="voteManageItemImage"
+            :src="activityItem.activityImage"
+          />
+          <div v-if="activityItem.coverType == 1" class="voteManageItemImage">
+            <iframe
+              :src="activityItem.videoCover"
+              scrolling="no"
+              border="0"
+              frameborder="no"
+              framespacing="0"
+              height="200px"
+              allowfullscreen="true"
+              class="voteManageItemImage"
+            >
+            </iframe>
+          </div>
         </div>
 
         <div class="shijianqujian">
-          <i class="el-icon-date"></i>{{ activityItem.beginTime }} -
-          {{ activityItem.endTime }}
+          <i class="el-icon-date"></i
+          >{{ activityItem.beginTime | dateFormat }} -
+          {{ activityItem.endTime | dateFormat }}
         </div>
 
         <div class="activityData">
@@ -42,7 +62,7 @@
             <p>选手数</p>
           </div>
           <div class="activityDataItem">
-            <p class="activityCount">{{ activityItem.votesCount }}</p>
+            <p class="activityCount">{{ activityItem.voteCount }}</p>
             <p>投票数</p>
           </div>
           <div class="activityDataItem">
@@ -52,30 +72,73 @@
         </div>
 
         <div class="activityButtonGroup">
-          <el-button size="small" type="primary" icon="el-icon-document-copy"
+          <el-button
+            size="small"
+            type="primary"
+            icon="el-icon-document-copy"
+            @click="activityEdit(activityItem.id)"
             >活动修改</el-button
           >
-          <el-button size="small" type="info" plain icon="el-icon-sunrise-1"
+          <el-button
+            size="small"
+            type="info"
+            plain
+            icon="el-icon-sunrise-1"
+            @click="playerManageClick(activityItem.id)"
             >选手管理</el-button
           >
-          <el-button size="small" type="success" plain icon="el-icon-printer"
+          <el-button
+            size="small"
+            type="success"
+            plain
+            icon="el-icon-printer"
+            @click="exportActivityExcel(activityItem.id)"
             >数据导出</el-button
           >
         </div>
 
         <div class="activityLook">
-          <el-button type="primary">查看活动链接及二维码</el-button>
+          <el-button
+            type="primary"
+            @click="getActivityUrlClick(activityItem.id)"
+            >查看活动链接及二维码</el-button
+          >
         </div>
       </div>
     </div>
     <el-pagination
-      current-page="1"
+      :current-page="queryInfo.currentPage"
       :page-sizes="[1, 3, 6]"
-      page-size="2"
+      :page-size="queryInfo.limit"
       layout="total, sizes, prev, pager, next, jumper"
-      total="25"
+      :total="total"
       class="pagination_style"
     ></el-pagination>
+
+    <el-dialog
+      title="活动链接"
+      :visible.sync="activityDialogVisible"
+      width="25%"
+    >
+      <div class="activityLink">
+        <h3>二维码</h3>
+        <el-image
+          class="codeImage"
+          style="width: 100px; height: 100px"
+          :src="currentActivity.activityQRCode"
+        ></el-image>
+        <h3>链接地址</h3>
+        <el-link
+          :href="currentActivity.activityUrl"
+          target="_blank"
+          type="success"
+          >{{ currentActivity.activityUrl }}</el-link
+        >
+        <p class="codeStyle">
+          点击活动修改，可调整优化活动的界面样式，规则介绍等
+        </p>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -83,90 +146,85 @@
 export default {
   data() {
     return {
-      activity: [
-        {
-          title: "ssss",
-          activityFlag: true,
-          id: 1,
-          createTime: "2021-05-06 16:20:52",
-          activityImage:
-            "https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg",
-          beginTime: "2021-05-06 16:20:52",
-          endTime: "2021-05-21 22:00:00",
-          playerCount: 70,
-          votesCount: 1000,
-          views: 9999,
-        },
-        {
-          title: "ssss",
-          activityFlag: true,
-          id: 1,
-          createTime: "2021-05-06 16:20:52",
-          activityImage:
-            "https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg",
-          beginTime: "2021-05-06 16:20:52",
-          endTime: "2021-05-21 22:00:00",
-          playerCount: 70,
-          votesCount: 1000,
-          views: 9999,
-        },
-        {
-          title: "ssss",
-          activityFlag: true,
-          id: 1,
-          createTime: "2021-05-06 16:20:52",
-          activityImage:
-            "https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg",
-          beginTime: "2021-05-06 16:20:52",
-          endTime: "2021-05-21 22:00:00",
-          playerCount: 70,
-          votesCount: 1000,
-          views: 9999,
-        },
-        {
-          title: "ssss",
-          activityFlag: true,
-          id: 1,
-          createTime: "2021-05-06 16:20:52",
-          activityImage:
-            "https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg",
-          beginTime: "2021-05-06 16:20:52",
-          endTime: "2021-05-21 22:00:00",
-          playerCount: 70,
-          votesCount: 1000,
-          views: 9999,
-        },
-        {
-          title: "ssss",
-          activityFlag: true,
-          id: 1,
-          createTime: "2021-05-06 16:20:52",
-          activityImage:
-            "https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg",
-          beginTime: "2021-05-06 16:20:52",
-          endTime: "2021-05-21 22:00:00",
-          playerCount: 70,
-          votesCount: 1000,
-          views: 9999,
-        },
-        {
-          title: "ssss",
-          activityFlag: true,
-          id: 1,
-          createTime: "2021-05-06 16:20:52",
-          activityImage:
-            "https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg",
-          beginTime: "2021-05-06 16:20:52",
-          endTime: "2021-05-21 22:00:00",
-          playerCount: 70,
-          votesCount: 1000,
-          views: 9999,
-        },
-      ],
+      activity: [],
+      queryInfo: {
+        //当前页数
+        currentPage: 1,
+        //当前每次显示多少条数据
+        limit: 6,
+      },
+      total: 0,
+      currentActivity: {},
+      activityDialogVisible: false,
     };
   },
+  created() {
+    this.getActivityList();
+  },
   methods: {
+    playerManageClick(activityId) {
+      this.$router.push({ path: `/activityPlayer/${activityId}` });
+    },
+    activityEdit(activityId) {
+      this.$router.push({ path: `/activityEdit/${activityId}` });
+    },
+    async getActivityList() {
+      let userId = window.localStorage.getItem("id");
+      const { data: res } = await this.$http.get(`/activity/part/${userId}`, {
+        params: this.queryInfo,
+      });
+
+      if (res.code !== 200) {
+        this.$message.error(res.message);
+      }
+
+      this.activity = res.data.records;
+      this.total = res.data.total;
+    },
+    async getActivityUrlClick(activityId) {
+      this.activityDialogVisible = true;
+      const { data: res } = await this.$http.get(
+        `/activity/${activityId}/code`
+      );
+
+      if (res.code !== 200) {
+        return this.$message.error(res.message);
+      }
+
+      this.currentActivity = res.data;
+    },
     handleSelect(tab, event) {},
+    //监听pageSize 改变的事件
+    handleSizeChange(newSize) {
+      this.queryInfo.limit = newSize;
+      this.getActivityList();
+    },
+    //监听 页码值 改变的事件
+    handleCurrentChange(newPage) {
+      this.queryInfo.currentPage = newPage;
+      this.getActivityList();
+    },
+    async updateActivityStatus(activityStatus, activityId) {
+      const { data: res } = await this.$http.put(
+        `/activity/${activityId}/status?status=${activityStatus}`
+      );
+
+      if (res.code !== 200) {
+        return this.$message.error(res.message);
+      }
+
+      if (activityStatus) {
+        this.$message.success("开启活动成功");
+      } else {
+        this.$message.success("关闭活动成功");
+      }
+    },
+    exportActivityExcel(activityId) {
+      let blobUrl = `http://localhost:8081/player/activity/${activityId}`;
+      this.$refs.downLoadLink.href = blobUrl;
+      this.$refs.downLoadLink.download = "player.xlsx";
+      this.$refs.downLoadLink.click();
+    },
   },
 };
 </script>
@@ -250,6 +308,7 @@ export default {
 .voteManageItemImage {
   border-radius: 10px;
   width: 100%;
+  height: 250px;
 }
 
 .imag_box {
@@ -271,5 +330,23 @@ export default {
 }
 .pagination_style {
   float: right;
+}
+.activityLink {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.activityLink h3 {
+  margin: 0 auto;
+}
+.codeStyle {
+  font-size: 13px;
+  color: #ccc;
+}
+.codeImage {
+  display: block;
+  margin: 0 auto;
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 </style>

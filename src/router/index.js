@@ -84,6 +84,18 @@ const routes = [
                     import('@/views/home/modules/activityIntroduce'),
                 props: true,
             },
+            {
+                path: '/activityEdit/:id',
+                name: 'activityEdit',
+                component: () => import('@/views/home/modules/activityEdit'),
+                props: true,
+            },
+            {
+                path: '/activityPlayer/:id',
+                name: 'activityPlayer',
+                component: () => import('@/views/home/modules/activityPlayer'),
+                props: true,
+            },
         ],
     },
     {

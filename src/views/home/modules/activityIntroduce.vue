@@ -5,19 +5,18 @@
         <div slot="header" class="clearfix">
           <span>活动规则</span>
         </div>
-        <div>
-          5月18日，在黑龙江省穆棱林业局有限公司林场，被放归自然的野生东北虎从铁箱子里走出（视频截图）。5月18日，记者在黑龙江省穆棱林业局有限公司东兴林场套子房沟61林班看到，之前在密山市获得成功救护的野生东北虎，18日已被放归长白山老爷岭山脉一带。专家表示，这是我国首次成功救护并放归野生东北虎。
-          新华社发
+        <div v-if="activity.voteRuleType == 1">
+          一个号每天能投{{
+            activity.playerVoteCount
+          }}票，可将全部票投给同一个选手
         </div>
+        <div v-if="activity.voteRuleType == 2">活动时间内只能投一票</div>
       </el-card>
       <el-card class="box-card2">
         <div slot="header" class="clearfix">
           <span>活动说明</span>
         </div>
-        <div>
-          5月18日，在黑龙江省穆棱林业局有限公司林场，被放归自然的野生东北虎从铁箱子里走出（视频截图）。5月18日，记者在黑龙江省穆棱林业局有限公司东兴林场套子房沟61林班看到，之前在密山市获得成功救护的野生东北虎，18日已被放归长白山老爷岭山脉一带。专家表示，这是我国首次成功救护并放归野生东北虎。
-          新华社发
-        </div>
+        <div v-html="activity.ruleContent"></div>
       </el-card>
     </div>
 
@@ -54,16 +53,28 @@
 </template>
 
 <script>
+import marked from "@/assets/js/marked";
 export default {
   data() {
     return {
       activityId: 0,
+      activity: {},
     };
   },
   created() {
     this.activityId = this.$route.params.id;
+    this.getActivityInfo(this.activityId);
   },
   methods: {
+    async getActivityInfo(activityId) {
+      const { data: res } = await this.$http.get(`/activity/${activityId}/all`);
+
+      if (res.code !== 200) {
+        return this.$message.error(res.message);
+      }
+      this.activity = res.data;
+      this.activity.ruleContent = marked(this.activity.ruleContent);
+    },
     redirectHome() {
       this.$router.push({ path: `/activity/${this.activityId}` });
     },

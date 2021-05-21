@@ -20,7 +20,7 @@
       </div>
       <div v-if="activity.coverType == 1" class="coverVideo">
         <iframe
-          :src="coverVideo"
+          :src="activity.videoCover"
           scrolling="no"
           border="0"
           frameborder="no"
@@ -195,7 +195,9 @@
                       style="margin-left: 40%"
                       size="small"
                       type="danger"
-                      @click="likesClick(playerItem.id, playerItem.group.id)"
+                      @click="
+                        likesClick(playerItem.userId, playerItem.group.id)
+                      "
                       plain
                       >点赞</el-button
                     >
@@ -205,7 +207,7 @@
                       size="small"
                       type="danger"
                       plain
-                      @click="voteClick(playerItem.id, playerItem.group.id)"
+                      @click="voteClick(playerItem.userId, playerItem.group.id)"
                       >投票</el-button
                     >
                     <el-button
@@ -213,7 +215,9 @@
                       style="margin-left: 35%"
                       size="small"
                       type="danger"
-                      @click="scoreClick(playerItem.id, playerItem.group.id)"
+                      @click="
+                        scoreClick(playerItem.userId, playerItem.group.id)
+                      "
                       plain
                       >评分</el-button
                     >
@@ -290,11 +294,11 @@
           >
             <el-select
               v-model="singupForm.groupId"
-              v-for="groupItem in activity.group"
-              :key="groupItem.id"
               placeholder="请选择活动区域"
             >
               <el-option
+                v-for="groupItem in activity.group"
+                :key="groupItem.id"
                 :label="groupItem.name"
                 :value="groupItem.id"
               ></el-option>
@@ -364,8 +368,6 @@ export default {
         "https://wy.010zh.cn/web/static/img/banner3.png",
       ],
       coverType: 0,
-      coverVideo:
-        "http://player.bilibili.com/player.html?aid=74300144&bvid=BV12E411t7w3&cid=127087669&page=9&as_wide=1",
       activityDate: [new Date(), new Date()],
       countDown: {
         day: 0,
@@ -474,7 +476,7 @@ export default {
       this.activitFlag = res.data.status;
 
       this.endTime = res.data.endTime;
-      this.beginTime = res.data.beginTime;
+      this.beginTime = new Date().getTime();
       this.activityDate = [
         new Date(res.data.beginTime),
         new Date(res.data.endTime),
@@ -554,31 +556,34 @@ export default {
       this.srcList = new Array(response.data, response.data);
     },
     async sginUpClick() {
-      this.singupForm.userId = Number.parseInt(
-        window.localStorage.getItem("id")
-      );
-      this.singupForm.activityId = Number.parseInt(this.activityId);
-      this.singupForm.groupId = Number.parseInt(this.singupForm.groupId);
-      console.log(this.singupForm);
-
-      const { data: res } = await this.$http.post(
-        "/player/enter/activity",
-        this.singupForm
-      );
-
-      if (res.code !== 200) {
-        return this.$message.error(res.message);
-      }
-
-      if (!this.activity.singUpFlag) {
-        this.$message.success("报名成功");
-      } else {
-        this.$message.success(
-          "报名成功!由于该活动开启了报名审核!请等待活动发起人审核!留意邮箱通知!"
+      this.$refs.sginupFormRef.validate(async (valid) => {
+        if (!valid) return;
+        this.singupForm.userId = Number.parseInt(
+          window.localStorage.getItem("id")
         );
-      }
+        this.singupForm.activityId = Number.parseInt(this.activityId);
+        this.singupForm.groupId = Number.parseInt(this.singupForm.groupId);
+        console.log(this.singupForm);
 
-      this.playerSingupDialogVisible = false;
+        const { data: res } = await this.$http.post(
+          "/player/enter/activity",
+          this.singupForm
+        );
+
+        if (res.code !== 200) {
+          return this.$message.error(res.message);
+        }
+
+        if (!this.activity.singUpFlag) {
+          this.$message.success("报名成功");
+        } else {
+          this.$message.success(
+            "报名成功!由于该活动开启了报名审核!请等待活动发起人审核!留意邮箱通知!"
+          );
+        }
+
+        this.playerSingupDialogVisible = false;
+      });
     },
     async getPlayerListBygroupId(playerGroupId) {
       let queryInfo = {
@@ -693,7 +698,7 @@ export default {
       this.$refs.voteScoreFormRef2.validate(async (valid) => {
         if (!valid) return;
         if (!Number(this.voteScore.value)) {
-          this.$message.error("必须是数值类型");
+          return this.$message.error("必须是数值类型");
         }
         if (
           this.voteScore.value < this.activity.inputRangeBegin ||
