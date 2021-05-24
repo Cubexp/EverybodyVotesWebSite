@@ -118,9 +118,9 @@
                 v-model="styleSetting.voteButtonType"
                 class="voteType"
               >
-                <el-radio :label="1">点赞</el-radio>
-                <el-radio :label="3">投票</el-radio>
-                <el-radio :label="2">打分</el-radio>
+                <el-radio label="1">点赞</el-radio>
+                <el-radio label="2">投票</el-radio>
+                <el-radio label="3">打分</el-radio>
               </el-radio-group>
 
               <div
@@ -504,7 +504,7 @@ export default {
       console.log(this.baseSetting);
       console.log(this.styleSetting);
       console.log(this.functionSetting);
-
+      alert(this.styleSetting.voteButtonType);
       let targetActivity = Object.assign(
         this.baseSetting,
         this.styleSetting,

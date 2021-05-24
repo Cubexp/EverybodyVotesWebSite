@@ -442,12 +442,15 @@ export default {
         endTime: activity.endTime,
         ruleContent: activity.ruleContent,
       };
+
       let urls = [];
-      activity.coverImages.forEach((item) => {
-        urls.push({
-          url: item,
+      if (activity.coverType === 0) {
+        activity.coverImages.forEach((item) => {
+          urls.push({
+            url: item,
+          });
         });
-      });
+      }
       this.styleSetting = {
         // 0 图片封面 1视频
         coverType: activity.coverType + "",
@@ -464,6 +467,7 @@ export default {
         inputRangeBegin: activity.inputRangeBegin,
         inputRangeEnd: activity.inputRangeEnd,
       };
+      console.log(this.styleSetting + " test");
       let currentSingFlag = activity.signFlag ? 1 : 0;
       let currentSingUpFlag = activity.singUpFlag ? 1 : 0;
       let currentSecretVoteFlag = activity.secretVoteFlag ? 1 : 0;
@@ -486,7 +490,7 @@ export default {
         voteRuleType: activity.voteRuleType,
         playerVoteCount: activity.playerVoteCount,
         // 0 关闭 1开记
-        secretVoteFlag: currentSecretVoteFlag,
+        secretVoteFlag: currentSecretVoteFlag + "",
       };
     },
     // 点击步骤条

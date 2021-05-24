@@ -29,19 +29,19 @@
         <el-table-column
           v-if="activity.voteButtonType == 1"
           property="voteCount"
+          label="点赞数"
+        >
+        </el-table-column>
+        <el-table-column
+          v-if="activity.voteButtonType == 3"
+          property="voteCount"
           label="票数"
         >
         </el-table-column>
         <el-table-column
           v-if="activity.voteButtonType == 2"
-          property="voteCount"
-          label="点选数"
-        >
-        </el-table-column>
-        <el-table-column
-          v-if="activity.voteButtonType == 3"
           property="averageScore"
-          label="评分"
+          label="评分(这是的评分是所有评分用户平均分)"
         >
         </el-table-column>
       </el-table>

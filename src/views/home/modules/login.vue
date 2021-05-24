@@ -410,7 +410,6 @@ export default {
         localstorage.setItem("id", res.data.id);
         localstorage.setItem("roleName", res.data.roleName);
         this.$router.push("/home");
-        this.$router.go(0);
         this.$message.success("登陆成功!");
       });
     },

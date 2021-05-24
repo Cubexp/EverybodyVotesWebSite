@@ -202,7 +202,7 @@
                       >点赞</el-button
                     >
                     <el-button
-                      v-if="activity.voteButtonType == 2"
+                      v-if="activity.voteButtonType == 3"
                       style="margin-left: 35%"
                       size="small"
                       type="danger"
@@ -211,7 +211,7 @@
                       >投票</el-button
                     >
                     <el-button
-                      v-if="activity.voteButtonType == 3"
+                      v-if="activity.voteButtonType == 2"
                       style="margin-left: 35%"
                       size="small"
                       type="danger"
@@ -428,7 +428,7 @@ export default {
       if (this.activity.voteButtonType == 1) {
         return "总点赞";
       }
-      if (this.activity.voteButtonType == 2) {
+      if (this.activity.voteButtonType == 3) {
         return "总投票";
       } else {
         return "总评分";
@@ -438,7 +438,7 @@ export default {
       if (this.activity.voteButtonType == 1) {
         return "点赞";
       }
-      if (this.activity.voteButtonType == 2) {
+      if (this.activity.voteButtonType == 3) {
         return "投票";
       } else {
         return "评分";
@@ -583,6 +583,8 @@ export default {
         }
 
         this.playerSingupDialogVisible = false;
+
+        this.getActivityInfo(this.activityId);
       });
     },
     async getPlayerListBygroupId(playerGroupId) {
