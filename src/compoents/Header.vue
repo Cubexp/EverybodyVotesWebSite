@@ -2,7 +2,7 @@
   <el-header>
     <el-row>
       <el-col :span="2" :offset="4">
-        <el-image style="width: 160px; height: 55px" :src="logoUrl"></el-image>
+        <el-image style="width: 40px; height: 35px; margin-top:10px" :src="require('@/assets/image/header/head_logo.png')"></el-image>
       </el-col>
       <el-col :span="2" :offset="1">
         <div class="title_hover title_hover2">

@@ -5,8 +5,8 @@
       <el-row>
         <el-col :span="3">
           <el-image
-            style="width: 160px; height: 55px"
-            :src="logoUrl"
+            style="width: 38px; height: 35px; margin-top: 10px;margin-left: 10px"
+            :src="require('@/assets/image/header/head_logo.png')"
           ></el-image>
         </el-col>
         <el-col :span="3" :offset="15" class="loginedStyle">

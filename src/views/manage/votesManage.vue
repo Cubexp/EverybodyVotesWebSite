@@ -8,7 +8,7 @@
 
     <el-tabs type="border-card" v-model="activeName" @tab-click="handleSelect">
       <el-tab-pane name="createActivity">
-        <span slot="label" @click="$router.push('/about')"
+        <span slot="label" @click="$router.push('/create')"
           ><i class="el-icon-date"></i> 创建活动</span
         >
       </el-tab-pane>

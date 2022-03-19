@@ -41,51 +41,51 @@ export default {
   data() {
     return {
       pictrues: [
-        "https://wy.010zh.cn/web/static/img/banner.png",
-        "https://wy.010zh.cn/web/static/img/banner2.png",
-        "https://wy.010zh.cn/web/static/img/banner3.png",
+        "/home/banner.png",
+        "/home/banner2.png",
+        "/home/banner3.png",
       ],
       practical_functionss: [
         {
           id: 1,
-          url: "https://www.rrwtp.com/static/index/img/index/gn_icon1.png",
+          url: "/home/home_create.png",
           title: "免费创建",
           describe: "极简模式，3分钟即可完成活动搭建",
         },
         {
           id: 2,
-          url: "https://www.rrwtp.com/static/index/img/index/gn_icon2.png",
+          url: "/home/home_video.png",
           title: "视频支持",
           describe: "视频支持BiliBili视频通用代码在线播放视频",
         },
         {
           id: 3,
-          url: "https://www.rrwtp.com/static/index/img/index/gn_icon4.png",
+          url: "/home/home_data.png",
           title: "数据导出",
           describe:
             "排行榜，投票可实时查看便携管理清晰明确的活动管理模式方便管理",
         },
         {
           id: 4,
-          url: "https://www.rrwtp.com/static/index/img/index/gn_icon5.png",
+          url: "/home/home_manage.png",
           title: "便携管理",
           describe: "清晰明确的活动管理模式方便管理",
         },
         {
           id: 5,
-          url: "https://www.rrwtp.com/static/index/img/index/gn_icon7.png",
+          url: "/home/home_coutn.png",
           title: "不限数量",
           describe: "不限制投票活动创建数量想做多久都可以",
         },
         {
           id: 6,
-          url: "https://www.rrwtp.com/static/index/img/index/gn_icon8.png",
+          url: "/home/home_group.png",
           title: "分组设置",
           describe: "可以设置不同选手分组分组报名，分组投票",
         },
         {
           id: 7,
-          url: "https://www.rrwtp.com/static/index/img/index/gn_icon6.png",
+          url: "/home/home_view.png",
           title: "实时预览",
           describe: "创建时整体效果预览更清晰操作",
         },

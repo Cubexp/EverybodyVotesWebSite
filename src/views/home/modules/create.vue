@@ -131,14 +131,14 @@
               </div>
 
               <div
-                v-if="styleSetting.voteButtonType == 3"
+                v-if="styleSetting.voteButtonType == 2"
                 class="voteButtPrise"
               >
                 <el-button type="success" size="medium" plain>投票</el-button>
               </div>
 
               <div
-                v-if="styleSetting.voteButtonType == 2"
+                v-if="styleSetting.voteButtonType == 3"
                 class="voteButtPrise2"
               >
                 <el-input-number

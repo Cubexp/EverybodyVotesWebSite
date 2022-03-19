@@ -1,7 +1,7 @@
 <template>
   <el-row>
     <el-col>
-      <p id="footer_text">©2021 All rights reserved Cuberxp</p>
+      <p id="footer_text">©2022 All rights reserved ZhaoJie</p>
     </el-col>
   </el-row>
 </template>

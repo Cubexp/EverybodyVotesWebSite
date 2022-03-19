@@ -120,8 +120,8 @@
                 class="voteType"
               >
                 <el-radio :label="1">点赞</el-radio>
-                <el-radio :label="3">投票</el-radio>
                 <el-radio :label="2">打分</el-radio>
+                <el-radio :label="3">投票</el-radio>
               </el-radio-group>
 
               <div

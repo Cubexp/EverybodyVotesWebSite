@@ -1,13 +1,13 @@
 <template>
   <div>
     <el-row>
-      <el-col :span="5" class="form_image" :offset="5">
+      <el-col :span="5" class="form_image" :offset="2">
         <el-image
-          style="width: 480px; height: 410px"
-          :src="logoUrl2"
+          style="width: 410px; height: 400px"
+          :src="require('@/assets/image/login/login_home.png')"
         ></el-image>
       </el-col>
-      <el-col :span="5" class="from_div" :offset="2">
+      <el-col :span="5" class="from_div" :offset="4">
         <div class="login_div">
           <el-tabs v-model="activeName" @tab-click="handleClick">
             <el-tab-pane label="用户登陆" name="login">
@@ -176,8 +176,7 @@ export default {
   components: {},
   data() {
     return {
-      // logoUrl: "https://www.rrwtp.com/static/index/img/logo2.png",
-      logoUrl2: "https://www.rrwtp.com/static/index/img/loginct.png",
+      logoUrl2: "@/assets/login/login_home.png",
       activeName: "login",
       loginForm: {
         phone: "",
