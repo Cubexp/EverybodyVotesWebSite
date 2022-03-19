@@ -54,7 +54,7 @@
                 </el-form-item>
               </el-col>
               <el-col :span="24">
-                <el-form-item label="创建时间:">
+                <el-form-item label="注册时间:">
                   {{ userInfoForm.registerTime | dateFormat }}
                 </el-form-item>
               </el-col>

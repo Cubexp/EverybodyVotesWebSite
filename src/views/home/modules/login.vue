@@ -400,16 +400,16 @@ export default {
           this.loginForm
         );
 
-        console.log(res);
-        if (res.code !== 200) {
+        if (res.code !== 200) 
           return this.$message.error(res.message);
-        }
+        
         let localstorage = window.localStorage;
         localstorage.setItem("token", res.data.token);
         localstorage.setItem("id", res.data.id);
         localstorage.setItem("roleName", res.data.roleName);
-        this.$router.push("/home");
         this.$message.success("登陆成功!");
+
+        location.replace('/home')
       });
     },
   },

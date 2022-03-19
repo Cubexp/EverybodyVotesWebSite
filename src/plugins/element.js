@@ -111,3 +111,40 @@ Vue.use(CheckboxGroup)
 Vue.use(Upload)
 Vue.use(Timeline)
 Vue.use(TimelineItem)
+
+// 设置弹框的提醒时间
+Vue.prototype.$message = function (msg) {
+    return Message({
+        message: msg,
+        duration: 1500
+    })
+}
+
+Vue.prototype.$message.success = function (msg) {
+    return Message.success({
+        message: msg,
+        duration: 1500
+    })
+}
+
+Vue.prototype.$message.warning = function (msg) {
+    return Message.warning({
+        message: msg,
+        duration: 1500
+    })
+}
+
+
+Vue.prototype.$message.error = function (msg) {
+    return Message.error({
+        message: msg,
+        duration: 1500
+    })
+}
+
+Vue.prototype.$message.info = function (msg) {
+    return Message.info({
+        message: msg,
+        duration: 1500
+    })
+}

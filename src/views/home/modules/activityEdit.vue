@@ -56,7 +56,7 @@
                 >进入下一步</el-button
               >
             </el-col>
-          </el-row>
+          </el-row> 
         </el-form>
       </div>
       <div v-show="active === 1">
@@ -243,7 +243,6 @@
               <el-input-number
                 v-model="functionSetting.playerVoteCount"
                 controls-position="right"
-                @change="handleChange"
                 :min="1"
                 :max="100"
                 size="small"
@@ -524,18 +523,27 @@ export default {
     },
     // 处理图片预览效果
     handlePreview(file) {
-      this.previcewPath = file.response.data;
+      this.previcewPath = file.url;
       this.previewDialogVisible = true;
     },
     // 处理移除图片的操作
-    handleRemove(file) {
-      const filePath = file.response.data;
+    async handleRemove(file) {
+      console.log(file)
+      const filePath = file.url;
       const i = this.styleSetting.imgsCover.findIndex((x) => x === filePath);
 
       this.styleSetting.imgsCover.splice(i, 1);
-      console.log(this.addForm);
 
-      console.log();
+      const { data: res } = await this.$http.delete(
+        '/activity/cover/images',
+        {
+          params: file.url
+        }
+      );
+
+      if (res.code !== 200) {
+        this.$message.error(res.message);
+      }
     },
     // 监听图片上传成功
     handleSuccess(response) {
@@ -547,6 +555,8 @@ export default {
       // 2.将图片信息对象push 到 pics 数组中
       this.styleSetting.imgsCover.push(response.data);
       this.srcList = new Array(response.data, response.data);
+
+      console.log(this.styleSetting.imgsCover)
     },
     async addGroup() {
       let groupObject = {
@@ -620,9 +630,10 @@ export default {
         this.styleSetting,
         this.functionSetting
       );
-      targetActivity.imgsCover = this.styleSetting.imgsCover.map(
+      /* targetActivity.imgsCover = this.styleSetting.imgsCover.map(
         (item) => item.url
-      );
+      ); */
+      targetActivity.imgsCover = this.styleSetting.imgsCover
       targetActivity.coverType = Number.parseInt(targetActivity.coverType);
       targetActivity.createId = window.localStorage.getItem("id");
       console.log(targetActivity);

@@ -455,7 +455,6 @@ export default {
       const i = this.styleSetting.imgsCover.findIndex((x) => x === filePath);
 
       this.styleSetting.imgsCover.splice(i, 1);
-      console.log(this.addForm);
     },
     // 监听图片上传成功
     handleSuccess(response) {
@@ -501,33 +500,40 @@ export default {
     },
     // 创建活动
     async creatActivity() {
-      console.log(this.baseSetting);
-      console.log(this.styleSetting);
-      console.log(this.functionSetting);
-      alert(this.styleSetting.voteButtonType);
-      let targetActivity = Object.assign(
-        this.baseSetting,
-        this.styleSetting,
-        this.functionSetting
-      );
+      let localstorage = window.localStorage
+      if (localstorage.getItem('token') !== null) {
+        console.log(this.baseSetting);
+        console.log(this.styleSetting);
+        console.log(this.functionSetting);
+        alert(this.styleSetting.voteButtonType);
+        let targetActivity = Object.assign(
+          this.baseSetting,
+          this.styleSetting,
+          this.functionSetting
+        );
 
-      targetActivity.coverType = Number.parseInt(targetActivity.coverType);
-      targetActivity.group = targetActivity.group.map((item) => item.name);
-      targetActivity.createId = window.localStorage.getItem("id");
-      console.log(targetActivity);
+        targetActivity.coverType = Number.parseInt(targetActivity.coverType);
+        targetActivity.group = targetActivity.group.map((item) => item.name);
+        targetActivity.createId = window.localStorage.getItem("id");
+        console.log(targetActivity);
 
-      const { data: res } = await this.$http.post(
-        "/activity/create",
-        targetActivity
-      );
+        const { data: res } = await this.$http.post(
+          "/activity/create",
+          targetActivity
+        );
 
-      if (res.code !== 200) {
-        return this.$message.error(res.message);
+        if (res.code !== 200) {
+          return this.$message.error(res.message);
+        }
+
+        this.$message.success("创建活动成功!");
+        this.$router.push("/manage/votes_manage");
+        this.$router.go(0);
+      } else {
+        this.$message.info('请先登陆才可以创建活动哦!')
+        
+        this.$router.push('/login')
       }
-
-      this.$message.success("创建活动成功!");
-      this.$router.push("/manage/votes_manage");
-      this.$router.go(0);
     },
   },
 };
