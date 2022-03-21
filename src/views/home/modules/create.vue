@@ -458,11 +458,11 @@ export default {
     },
     // 监听图片上传成功
     handleSuccess(response) {
+      console.log(response);
       if (response.code !== 200) {
         return this.$message.error("上传文件失败!" + response.message);
       }
 
-      console.log(response);
       // 2.将图片信息对象push 到 pics 数组中
       this.styleSetting.imgsCover.push(response.data);
       this.srcList = new Array(response.data, response.data);

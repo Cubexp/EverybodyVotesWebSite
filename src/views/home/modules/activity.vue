@@ -421,6 +421,7 @@ export default {
       srcList: [],
       playerList: [],
       voteRemakr: "",
+      signFlag: false
     };
   },
   computed: {
@@ -454,8 +455,9 @@ export default {
     this.addActivityViews(this.activityId);
   },
   methods: {
-    async activitySingup() {
-      if (!this.activitFlag) {
+    activitySingup() {
+      console.log("是否可能报名", this.signFlag)
+      if (!this.activitFlag || !this.signFlag) {
         return this.$message.error("该活动未开启报名!!!");
       }
 
@@ -486,6 +488,9 @@ export default {
       } else {
         this.getAllPlayerList();
       }
+      
+      this.signFlag = res.data.signFlag
+
       this.voteRemakr = `评分范围:${this.activity.inputRangeBegin} ~ ${this.activity.inputRangeEnd}`;
     },
     async addActivityViews(activityId) {

@@ -205,19 +205,33 @@ export default {
       this.getActivityList();
     },
     async updateActivityStatus(activityStatus, activityId) {
+      
+      // 活动时间是否超过结束时间
+      let hasOverDateTime = false
+      for (let i = 0; i < this.activity.length; i ++) 
+        if (this.activity[i].id === activityId && this.activity[i].endTime < Date.parse(new Date())) {
+          hasOverDateTime = true
+
+          this.activity[i].status = false
+          break
+        }
+
+      if (hasOverDateTime === true && activityStatus === true) 
+        return this.$message.info('当前活动的时间己过期！请修改活动开始与结束时间！')
+
       const { data: res } = await this.$http.put(
         `/activity/${activityId}/status?status=${activityStatus}`
-      );
+        );
 
-      if (res.code !== 200) {
-        return this.$message.error(res.message);
-      }
+        if (res.code !== 200) {
+          return this.$message.error(res.message);
+        }
 
-      if (activityStatus) {
-        this.$message.success("开启活动成功");
-      } else {
-        this.$message.success("关闭活动成功");
-      }
+        if (activityStatus) {
+          this.$message.success("开启活动成功");
+        } else {
+          this.$message.success("关闭活动成功");
+        }
     },
     exportActivityExcel(activityId) {
       let blobUrl = `http://localhost:8081/player/activity/${activityId}`;

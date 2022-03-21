@@ -533,30 +533,23 @@ export default {
       const i = this.styleSetting.imgsCover.findIndex((x) => x === filePath);
 
       this.styleSetting.imgsCover.splice(i, 1);
-
-      const { data: res } = await this.$http.delete(
-        '/activity/cover/images',
-        {
-          params: file.url
-        }
-      );
-
+      
       if (res.code !== 200) {
         this.$message.error(res.message);
       }
     },
     // 监听图片上传成功
-    handleSuccess(response) {
+    async handleSuccess(response) {
       if (response.code !== 200) {
-        return this.$message.error("上传文件失败!" + response.message);
+        return this.$message.error("上传文件失败!" + res.message);
       }
 
-      console.log(response);
       // 2.将图片信息对象push 到 pics 数组中
       this.styleSetting.imgsCover.push(response.data);
       this.srcList = new Array(response.data, response.data);
 
       console.log(this.styleSetting.imgsCover)
+      console.log(this.srcList)
     },
     async addGroup() {
       let groupObject = {
@@ -620,6 +613,7 @@ export default {
     },
     // 修改活动
     async updateActivity() {
+      console.log("开始时的: ", this.styleSetting.imgsCover)
       console.log(this.baseSetting);
       console.log(this.styleSetting);
       console.log(this.functionSetting);
@@ -630,10 +624,19 @@ export default {
         this.styleSetting,
         this.functionSetting
       );
-      /* targetActivity.imgsCover = this.styleSetting.imgsCover.map(
-        (item) => item.url
-      ); */
-      targetActivity.imgsCover = this.styleSetting.imgsCover
+      let test = []
+
+      for (let i = 0; i < this.styleSetting.imgsCover.length; i ++) 
+        if (this.styleSetting.imgsCover[i] !== null) 
+          if ( typeof this.styleSetting.imgsCover[i] === 'object') {
+            test.push(this.styleSetting.imgsCover[i].url)
+          } else {
+            test.push(this.styleSetting.imgsCover[i])
+          }
+
+      targetActivity.imgsCover = test
+      
+      //targetActivity.imgsCover = this.styleSetting.imgsCover
       targetActivity.coverType = Number.parseInt(targetActivity.coverType);
       targetActivity.createId = window.localStorage.getItem("id");
       console.log(targetActivity);
