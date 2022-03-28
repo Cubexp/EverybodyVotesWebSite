@@ -2,6 +2,7 @@
   <div :class="activitFlag == true ? 'box' : 'activityClose'">
     <!-- 活动开启中 -->
     <div v-if="activitFlag == true">
+      <NoticeBoard v-if="noticeFlag" :lists="activity.notice" class="notice-board" />
       <div v-if="activity.coverType == 0" class="coverImg">
         <el-carousel
           :interval="4000"
@@ -359,7 +360,12 @@
 </template>
 
 <script>
+import NoticeBoard from "@/compoents/activity/NoticeBoard"
+
 export default {
+  components: {
+    NoticeBoard
+  },
   data() {
     return {
       pictrues: [
@@ -421,7 +427,8 @@ export default {
       srcList: [],
       playerList: [],
       voteRemakr: "",
-      signFlag: false
+      signFlag: false,
+      notice: []
     };
   },
   computed: {
@@ -483,6 +490,11 @@ export default {
         new Date(res.data.beginTime),
         new Date(res.data.endTime),
       ];
+      this.noticeFlag = res.data.noticeFlag
+      if (this.noticeFlag) {
+        this.activity.notice = new Array(res.data.notice)
+      }
+      console.log(this.activity.notice)
       if (this.activity.groupFlag) {
         this.getPlayerListBygroupId(this.activity.group[0].id);
       } else {
@@ -856,5 +868,11 @@ export default {
   font-size: 15px;
   font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB",
     "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+}
+.notice-board {
+  width: auto;
+  height: 40px;
+  line-height: 20px;
+  overflow: hidden;
 }
 </style>
