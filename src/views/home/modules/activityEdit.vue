@@ -85,8 +85,8 @@
               </el-tab-pane>
               <el-tab-pane label="视频封面" name="1">
                 <el-input
-                  placeholder="请输入BiliBili视频链接"
-                  v-model="styleSetting.videoCover"
+                      placeholder="请输入BiliBili视频链接"
+                      v-model="styleSetting.videoCover"
                 ></el-input>
                 <el-link type="primary" href="www.baidu.com"
                   >目前仅支技BiliBili视频链接，如何上传视频链接？</el-link
@@ -450,6 +450,7 @@ export default {
           });
         });
       }
+
       this.styleSetting = {
         // 0 图片封面 1视频
         coverType: activity.coverType + "",
@@ -613,10 +614,24 @@ export default {
     },
     // 修改活动
     async updateActivity() {
-      console.log("开始时的: ", this.styleSetting.imgsCover)
+      console.log("开始时的: ", this.styleSetting.videoCover)
       console.log(this.baseSetting);
       console.log(this.styleSetting);
       console.log(this.functionSetting);
+
+
+      const bilUrl = 'https://player.bilibili.com/player.html?aid=637507257&bvid={url}&cid=556614853&page=1&updated'
+      if (this.styleSetting.coverType == 1 && this.styleSetting.videoCover.indexOf('https://player.bilibili.com/player.html?') == -1) {
+        let urlRegex = new RegExp('[a-zA-z]+://[^s]*')
+
+        if (!urlRegex.test(this.styleSetting.videoCover)) {
+          this.$message.error("视频封面格式错误!请修改")
+
+          return 
+        }
+        
+        this.styleSetting.videoCover = bilUrl.replace('{url}', this.styleSetting.videoCover.split('video/')[1].split('?')[0])
+      }
 
       delete this.functionSetting.group;
       let targetActivity = Object.assign(
@@ -636,7 +651,6 @@ export default {
 
       targetActivity.imgsCover = test
       
-      //targetActivity.imgsCover = this.styleSetting.imgsCover
       targetActivity.coverType = Number.parseInt(targetActivity.coverType);
       targetActivity.createId = window.localStorage.getItem("id");
       console.log(targetActivity);

@@ -505,7 +505,21 @@ export default {
         console.log(this.baseSetting);
         console.log(this.styleSetting);
         console.log(this.functionSetting);
-        alert(this.styleSetting.voteButtonType);
+        
+        const bilUrl = 'https://player.bilibili.com/player.html?aid=637507257&bvid={url}&cid=556614853&page=1&updated'
+        if (this.styleSetting.coverType == 1 &&
+            this.styleSetting.videoCover.indexOf('https://player.bilibili.com/player.html?') == -1) {
+          let urlRegex = new RegExp('[a-zA-z]+://[^s]*')
+
+          if (!urlRegex.test(this.styleSetting.videoCover)) {
+            this.$message.error("视频封面格式错误!请修改")
+
+            return 
+          }
+        
+          this.styleSetting.videoCover = bilUrl.replace('{url}', this.styleSetting.videoCover.split('video/')[1].split('?')[0])
+        }
+
         let targetActivity = Object.assign(
           this.baseSetting,
           this.styleSetting,
@@ -516,6 +530,8 @@ export default {
         targetActivity.group = targetActivity.group.map((item) => item.name);
         targetActivity.createId = window.localStorage.getItem("id");
         console.log(targetActivity);
+
+        
 
         const { data: res } = await this.$http.post(
           "/activity/create",
