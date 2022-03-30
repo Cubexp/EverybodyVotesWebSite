@@ -314,11 +314,11 @@ export default {
       // 已选步骤
       stepSuc: [0],
       props: {
-        defaultOpen: "preview",
+        defaultOpen: "edit",
         subfield: false,
         editable: true,
         toolbarsFlag: true,
-        navigation: true,
+        navigation: false,
         boxShadow: false,
       },
       pickerOptions: {

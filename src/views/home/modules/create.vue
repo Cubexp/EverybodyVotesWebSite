@@ -314,11 +314,11 @@ export default {
       // 已选步骤
       stepSuc: [0],
       props: {
-        defaultOpen: "preview",
+        defaultOpen: "edit",
         subfield: false,
         editable: true,
         toolbarsFlag: true,
-        navigation: true,
+        navigation: false,
         boxShadow: false,
       },
       pickerOptions: {
@@ -386,7 +386,7 @@ export default {
         notice: "",
         // 投票按钮类型
         // 1点赞，2投票，3打分
-        voteButtonType: 1,
+        voteButtonType: '1',
         // 打分的话他的范围是多少
         inputRangeBegin: 0,
         inputRangeEnd: 100,
@@ -403,7 +403,7 @@ export default {
         // 2  票数从高到低
         // 3 报名时间倒序
         playerMethod: 1,
-        groupFlag: true,
+        groupFlag: false,
         //分组数据
         group: [],
         // 1一个号每天能投，2活动时间内只能投
