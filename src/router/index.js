@@ -120,6 +120,11 @@ const routes = [
                 component: () => import('@/views/backstage/news/editNews'),
                 props: true,
             },
+            {
+                path: 'activityList',
+                name: 'activityList',
+                component: () => import('@/views/backstage/activity/activityList'),
+            },
         ],
     },
     {

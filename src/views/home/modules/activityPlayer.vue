@@ -223,6 +223,7 @@ export default {
 			},
 			srcList: [],
 			previcewPath: "",
+			roleName: "",
 		}
 	},
 	created() {
