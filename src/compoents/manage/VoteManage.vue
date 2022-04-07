@@ -16,6 +16,7 @@
 						v-model="activityItem.status"
 						active-text="活动开启"
 						inactive-text="关闭"
+						:disabled="activityItem.passed == 0"
 						@change="updateActivityStatus(activityItem.status, activityItem.id)"
 					>
 					</el-switch>
@@ -29,6 +30,10 @@
 					<!--- 活动关闭图片 -->
 					<div v-if="activityItem.status == false" class="guanbi">
 						活动已关闭
+					</div>
+
+					<div v-if="activityItem.passed == 0" class="guanbi">
+						活动己被禁止，请联系管理员
 					</div>
 					<img
 						v-if="activityItem.coverType == 0"
@@ -77,6 +82,7 @@
 						type="primary"
 						icon="el-icon-document-copy"
 						@click="activityEdit(activityItem.id)"
+						:disabled="activityItem.passed == 0"
 						>活动修改</el-button
 					>
 					<el-button
@@ -85,6 +91,7 @@
 						plain
 						icon="el-icon-sunrise-1"
 						@click="playerManageClick(activityItem.id)"
+						:disabled="activityItem.passed == 0"
 						>选手管理</el-button
 					>
 					<el-button
@@ -93,6 +100,7 @@
 						plain
 						icon="el-icon-printer"
 						@click="exportActivityExcel(activityItem.id)"
+						:disabled="activityItem.passed == 0"
 						>数据导出</el-button
 					>
 				</div>
@@ -101,6 +109,7 @@
 					<el-button
 						type="primary"
 						@click="getActivityUrlClick(activityItem.id)"
+						:disabled="activityItem.passed == 0"
 						>查看活动链接及二维码</el-button
 					>
 				</div>
