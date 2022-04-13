@@ -59,12 +59,12 @@
 				</template>
 			</el-table-column>
 
-			<el-table-column label="禁止" width="80">
+			<el-table-column label="禁止活动" width="80">
 				<template slot-scope="scope">
 					<el-switch
 						v-model="scope.row.passed"
-						:active-value="1"
-						:inactive-value="0"
+						:active-value="0"
+						:inactive-value="1"
 						@change="updateActivityStatus(scope.row.id, scope.row.passed)"
 					>
 					</el-switch>
@@ -425,7 +425,7 @@
 					prop="number"
 					width="50px"
 				></el-table-column>
-				<el-table-column label="姓名" prop="name"></el-table-column>
+				<el-table-column label="名称" prop="name"></el-table-column>
 				<el-table-column label="报名时间" width="150px">
 					<template slot-scope="scope">{{
 						scope.row.createTime | dateFormat
@@ -445,10 +445,12 @@
 					</template>
 				</el-table-column>
 
-				<el-table-column label="禁止" width="80">
+				<el-table-column label="禁止选手" width="80">
 					<template slot-scope="scope">
 						<el-switch
 							v-model="scope.row.review"
+							:active-value="false"
+							:inactive-value="true"
 							@change="
 								updateActivityPlayerReview(scope.row.id, scope.row.review)
 							"
@@ -587,6 +589,8 @@ export default {
 				return this.$message.error("修改状态失败!")
 			} else {
 				this.$message.success("修改成功！")
+
+				this.getActivityPlayer(this.playerActivityId)
 			}
 		},
 		//监听pageSize 改变的事件

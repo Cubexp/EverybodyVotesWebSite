@@ -16,7 +16,7 @@ import './assets/css/global.css'
 import './assets/fonts/iconfont.css'
 
 // 远程后台地址
-axios.defaults.baseURL = 'http://localhost:8081/'
+axios.defaults.baseURL = 'http://localhost:8081'
 
 axios.interceptors.request.use((config) => {
     if (window.localStorage.getItem('token')) {
