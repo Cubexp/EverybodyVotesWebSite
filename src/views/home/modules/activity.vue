@@ -12,7 +12,7 @@
 					:interval="4000"
 					type="card"
 					height="300px"
-					autoplay="true"
+					:autoplay="true"
 				>
 					<el-carousel-item v-for="item in activity.coverImages" :key="item">
 						<el-image
@@ -171,6 +171,12 @@
 									>{{ playerGroupItem.name }}</el-button
 								>
 							</el-col>
+
+							<el-col :span="2">
+								<el-button round @click="getPlayerListBygroupId(-1)"
+									>所有</el-button
+								>
+							</el-col>
 						</el-row>
 
 						<!-- 选手 -->
@@ -200,9 +206,7 @@
 											style="margin-left: 40%"
 											size="small"
 											type="danger"
-											@click="
-												likesClick(playerItem.userId, playerItem.group.id)
-											"
+											@click="likesClick(playerItem.userId, playerItem.group)"
 											plain
 											>点赞</el-button
 										>
@@ -212,7 +216,7 @@
 											size="small"
 											type="danger"
 											plain
-											@click="voteClick(playerItem.userId, playerItem.group.id)"
+											@click="voteClick(playerItem.userId, playerItem.group)"
 											>投票</el-button
 										>
 										<el-button
@@ -220,9 +224,7 @@
 											style="margin-left: 35%"
 											size="small"
 											type="danger"
-											@click="
-												scoreClick(playerItem.userId, playerItem.group.id)
-											"
+											@click="scoreClick(playerItem.userId, playerItem.group)"
 											plain
 											>评分</el-button
 										>
@@ -285,6 +287,7 @@
 							list-type="picture"
 							:headers="headerObj"
 							:on-success="handleSuccess"
+							limit="1"
 						>
 							<el-button size="small" type="primary">点击上传</el-button>
 							<div slot="tip" class="el-upload__tip">
@@ -437,6 +440,7 @@ export default {
 			voteRemakr: "",
 			signFlag: false,
 			notice: [],
+			noticeFlag: false,
 		}
 	},
 	computed: {
@@ -503,12 +507,8 @@ export default {
 				this.activity.notice = new Array(res.data.notice)
 			}
 			console.log(this.activity.notice)
-			if (this.activity.groupFlag) {
-				this.getPlayerListBygroupId(this.activity.group[0].id)
-			} else {
-				this.getAllPlayerList()
-			}
 
+			this.getAllPlayerList()
 			this.signFlag = res.data.signFlag
 
 			this.voteRemakr = `评分范围:${this.activity.inputRangeBegin} ~ ${this.activity.inputRangeEnd}`
@@ -656,8 +656,8 @@ export default {
 			this.playerList = res.data.records
 			console.log(res)
 		},
-		async likesClick(userId, userGroupId) {
-			console.log("点赞开始")
+		async likesClick(userId, userGroup) {
+			console.log("点赞开始", userGroup)
 			//匿名投票未开启
 			if (!this.activity.secretVoteFlag) {
 				let logined = window.localStorage.getItem("id")
@@ -685,8 +685,8 @@ export default {
 
 			this.$message.success("点赞成功")
 
-			if (userGroupId) {
-				this.getPlayerListBygroupId(userGroupId)
+			if (likesClick) {
+				this.getPlayerListBygroupId(likesClick.id)
 			}
 		},
 		async voteClick(userId, userGroupId) {
@@ -716,7 +716,10 @@ export default {
 			}
 
 			this.$message.success("投票成功")
-			this.getPlayerListBygroupId(userGroupId)
+
+			if (userGroupId) {
+				this.getPlayerListBygroupId(userGroupId.id)
+			}
 		},
 		scoreClick(userId, userGroupId) {
 			this.votesScoreDialogVisible = true
@@ -724,10 +727,15 @@ export default {
 			this.voteScore.activityId = this.activityId
 			this.voteScore.playerId = userId
 			this.voteScore.votePersonId = window.localStorage.getItem("id")
-			this.voteScore.userGroupId = userGroupId
+
+			if (userGroupId) {
+				this.voteScore.userGroupId = userGroupId.id
+			} else {
+				this.voteScore.userGroupId = userGroupId
+			}
 		},
 		async voteScoreClick() {
-			console.log(this.voteScore)
+			console.log("userGroupid", this.voteScore.userGroupId)
 			this.$refs.voteScoreFormRef2.validate(async (valid) => {
 				if (!valid) return
 				if (!Number(this.voteScore.value)) {
@@ -742,16 +750,25 @@ export default {
 					)
 				}
 
-				let currentGroupId = this.voteScore.userGroupId
-				delete this.voteScore.userGroupId
+				let currentGroupId
+				if (this.voteScore.userGroupId) {
+					currentGroupId = this.voteScore.userGroupId.id
+				}
 
+				delete this.voteScore.userGroupId
 				const { data: res } = await this.$http.post("/vote/", this.voteScore)
 
 				if (res.code !== 200) {
 					return this.$message.error("评分失败!" + res.message)
 				}
 				this.$message.success("评分成功!")
-				this.getPlayerListBygroupId(currentGroupId)
+
+				if (this.voteScore.userGroupId) {
+					this.getPlayerListBygroupId(currentGroupId)
+				} else {
+					this.getAllPlayerList()
+				}
+
 				this.votesScoreDialogVisible = false
 			})
 		},

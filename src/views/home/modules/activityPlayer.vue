@@ -125,6 +125,7 @@
 						:headers="headerObj"
 						:on-success="handleSuccess"
 						:file-list="srcList"
+						limit="1"
 					>
 						<el-button size="small" type="primary">点击上传</el-button>
 						<div slot="tip" class="el-upload__tip">
