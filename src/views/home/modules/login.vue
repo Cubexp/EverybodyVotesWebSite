@@ -206,12 +206,6 @@ export default {
 				phone: [
 					{
 						required: true,
-						message: "请输入正确的手机号码",
-						pattern: "/^1[3|4|5|7|8][0-9]{9}$/",
-						trigger: "blur",
-					},
-					{
-						required: true,
 						message: "请输入手机号码",
 						trigger: "blur",
 					},
